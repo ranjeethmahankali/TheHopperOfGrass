@@ -2,7 +2,11 @@
 <html>
 <head>
 	<style>
-		#mydiv {
+		*{
+			padding: 0px;
+			margin: 0px;
+		}
+		.comp {
 			position: absolute;
 			z-index: 9;
 			background-color: #f1f1f1;
@@ -10,24 +14,41 @@
 			text-align: center;
 		}
 
-		#mydivheader {
-			padding: 10px;
+		.compHeader {
+			padding: 5px;
 			cursor: move;
 			z-index: 10;
-			background-color: #2196F3;
+			background-color: #a9a9a9;
 			color: #fff;
+		}
+		
+		#guiSpace{
+			position: absolute;
+			left: 0px;
+			top: 0px;
+			border: 1px solid black;
+			width: 600px;
+			height: 600px;
 		}
 	</style>
 </head>
 <body>
+	<div id="guiSpace"></div>
 	<!--Draggable DIV:-->
-	<div id="mydiv">
-	  <!--Include a header DIV with the same name as the draggable DIV, followed by "header":-->
-	  <div id="mydivheader">Click here to move</div>
-	  <p>Move</p>
-	  <p>this</p>
-	  <p>DIV</p>
+	<div class="comp">
+		<!--Include a header DIV with the same name as the draggable DIV, followed by "header":-->
+		<div class="compHeader">Click here to move</div>
+		<div>
+		</div>
+		<p>Move</p>
+		<p>this</p>
+		<p>DIV</p>
 	</div>
+	
+	<!--svg height="600" width="600">
+		<path d="M 100 100 C 300 50, 300 150, 500 100" stroke="blue" stroke-width="5" fill="none" />
+		Sorry, your browser does not support inline SVG.
+	</svg-->
 	
 	<script type="text/javascript" src="draggable.js"></script>
 </body>
