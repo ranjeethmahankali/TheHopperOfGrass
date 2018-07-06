@@ -29,6 +29,10 @@ class Component{
 		compFieldLookup[this.id] = this;
 	}
 	
+	addConnection(){
+		
+	}
+	
 	getHtml(){
 		if(domLookup[this.id] != undefined){
 			return domLookup[this.id];
@@ -130,6 +134,12 @@ class Connection{
 		this.outgoingId = outgoingId;
 		this.outgoingIndex = outgoingIndex;
 		
+		//setting up the connection info in the components that are being
+		//connected
+		
+		var inComp = compFieldLookup[this.incomingId];
+		var outComp = compFieldLookup[this.outgoingId];
+		
 		connectionLookup[this.id] = this;
 	}
 	
@@ -143,6 +153,7 @@ class Connection{
 		//this is the geometry part
 		var p1, p2, p3, p4;
 		var incoming = this.getIncomingParam();
+		debug = incoming
 		var outgoing = this.getOutgoingParam();
 		if(incoming == null || outgoing == null){return null;}
 		
@@ -153,13 +164,19 @@ class Connection{
 		outTop = globalOffsetTop(outgoing);
 		console.log(inLeft, inTop, outLeft, outTop);
 		
-		p1 = [inLeft + incoming.offsetWidth, inTop + Math.floor(incoming.offsetHeight/2)];
-		p2 = [inLeft + incoming.offsetWidth + 20, inTop + Math.floor(incoming.offsetHeight/2)];
-		p3 = [outLeft - 20, outTop + Math.floor(incoming.offsetHeight/2)];
-		p4 = [outLeft, outTop + Math.floor(incoming.offsetHeight/2)];
+		//ext is the control point which affects how soon / late the curve turns to the other component
+		var ext = 60
 		
-		console.log(p1,p2,p3,p4);
+		p1 = [inLeft + incoming.offsetWidth, 
+			inTop + Math.floor(incoming.offsetHeight/2) + 1];
+		p2 = [inLeft + incoming.offsetWidth + ext, 
+			inTop + Math.floor(incoming.offsetHeight/2) +1];
+		p3 = [outLeft - ext, outTop + Math.floor(incoming.offsetHeight/2)+1];
+		p4 = [outLeft, outTop + Math.floor(incoming.offsetHeight/2)+1];
 		
+		//draw the connection as a straight line
+		//var geomDef = "M "+p1[0]+" "+p1[1]+" L "+p4[0]+" "+p4[1];
+		//or draw it as a curve
 		var geomDef = "M "+p1[0]+" "+p1[1]+" C "+p2[0]+" "+p2[1]+", "+p3[0]+" "+
 			p3[1]+", "+p4[0]+" "+p4[1];
 		path.setAttribute("d", geomDef);

@@ -8,20 +8,31 @@ function newGuid() {
 }
 
 function globalOffsetLeft(node){
-	if(node.parentElement.tagName.toLowerCase() == "body"){
+	if(node.tagName.toLowerCase() != "div"){
+		return globalOffsetLeft(node.parentElement);
+	}
+	if(node.parentElement.id == "guiSpace"){
 		return node.offsetLeft;
 	}
 	return node.offsetLeft + globalOffsetLeft(node.parentElement);
 }
 
 function globalOffsetTop(node){
-	if(node.parentElement.tagName.toLowerCase() == "body"){
+	if(node.tagName.toLowerCase() != "div"){
+		return globalOffsetTop(node.parentElement);
+	}
+	if(node.parentElement.id == "guiSpace"){
 		return node.offsetTop;
 	}
 	return node.offsetTop + globalOffsetTop(node.parentElement);
 }
 
 function addSvgPath(pathNode){
-	var html = document.getElementsByTagNameNS("http://www.w3.org/2000/svg", 'svg')[0];
-	html.appendChild(pathNode);
+	var container = document.getElementsByTagNameNS("http://www.w3.org/2000/svg", 'svg')[0];
+	container.appendChild(pathNode);
+}
+
+function addComponent(compNode){
+	var container = document.getElementById("guiSpace");
+	container.appendChild(compNode);
 }

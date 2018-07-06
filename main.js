@@ -8,8 +8,8 @@ function main(){
 		null);
 	console.log(comp.id);
 	fld = new Field("number", true);
-	document.body.appendChild(comp.getHtml());
-	document.body.appendChild(fld.getHtml());
+	addComponent(comp.getHtml());
+	addComponent(fld.getHtml());
 }
 
 function addConnection(){
