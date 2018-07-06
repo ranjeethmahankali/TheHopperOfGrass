@@ -11,11 +11,13 @@ for(var i = 0; i < comps.length; i++){
 // var debug = null;
 
 function getElementBounds(elem){
-	return [elem.offsetLeft, elem.offsetLeft + elem.offsetWidth, elem.offsetTop, elem.offsetTop + elem.offsetHeight];
+	return [elem.offsetLeft, elem.offsetLeft + elem.offsetWidth, 
+		elem.offsetTop, elem.offsetTop + elem.offsetHeight];
 }
 
 function boundsContained(bound, container){
-	return bound[0] >= container[0] && bound[1] <= container[1] && bound[2] >= container[2] && bound[3] <= container[3];
+	return bound[0] >= container[0] && bound[1] <= container[1] && 
+		bound[2] >= container[2] && bound[3] <= container[3];
 }
 
 function dragElement(elmnt) {
@@ -23,7 +25,10 @@ function dragElement(elmnt) {
 	if (elmnt.getElementsByClassName("compHeader")[0]) {
 		/* if present, the header is where you move the DIV from:*/
 		elmnt.getElementsByClassName("compHeader")[0].onmousedown = dragMouseDown;
-	} else {
+	} else if (elmnt.getElementsByClassName("outputBox")[0]) {
+		elmnt.getElementsByClassName("outputBox")[0].onmousedown = dragMouseDown
+	}
+	else {
 		/* otherwise, move the DIV from anywhere inside the DIV:*/
 		elmnt.onmousedown = dragMouseDown;
 	}
@@ -56,9 +61,10 @@ function dragElement(elmnt) {
 			xpos = elmnt.offsetLeft - pos1;
 			ypos = elmnt.offsetTop - pos2;
 		}else{
+			//leave it where it is
 			xpos = elmnt.offsetLeft;
 			ypos = elmnt.offsetTop;
-			return;
+			//return;
 		}
 		
 		// making sure its within the bounds

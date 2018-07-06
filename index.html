@@ -12,14 +12,19 @@
 			background-color: #f1f1f1;
 			border: 1px solid #d3d3d3;
 			text-align: center;
+			width: 120px;
+			font-family: monospace;
+			font-size: 13px;
 		}
 
 		.compHeader {
-			padding: 5px;
+			padding: 0px;
 			cursor: move;
 			z-index: 10;
 			background-color: #a9a9a9;
 			color: #fff;
+			width:inherit;
+			font-weight: bold;
 		}
 		
 		#guiSpace{
@@ -30,26 +35,66 @@
 			width: 600px;
 			height: 600px;
 		}
+		
+		.inputBox{
+			float: left;
+		}
+		.inputs{
+			z-index:11;
+			cursor: pointer;
+			display: block;
+			width: 70px;
+			text-align: left;
+			border-left: 4px solid sienna;
+			padding-left: 5px;
+			margin: 2px 0px 2px 0px;
+			background-color: #e1e1e1;
+		}
+		.inputs:hover{
+			background-color: #b1b1b1;
+		}
+		
+		.outputBox{
+			float:right;
+		}
+		.outputs{
+			z-index:11;
+			cursor: pointer;
+			display: block;
+			width: 30px;
+			text-align: right;
+			border-right: 4px solid sienna;
+			padding-right: 5px;
+			margin: 2px 0px 2px 0px;
+			background-color: #e1e1e1;
+		}
+		.outputs:hover{
+			background-color: #b1b1b1;
+		}
 	</style>
 </head>
 <body>
-	<div id="guiSpace"></div>
-	<!--Draggable DIV:-->
-	<div class="comp">
-		<!--Include a header DIV with the same name as the draggable DIV, followed by "header":-->
-		<div class="compHeader">Click here to move</div>
-		<div>
-		</div>
-		<p>Move</p>
-		<p>this</p>
-		<p>DIV</p>
+	<div id="guiSpace">
+		<!--div class="comp">
+			<div class="compHeader">Circle</div>
+			<div class="inputBox">
+				<p class="inputs">C</p>
+				<p class="inputs">R</p>
+			</div>
+			<div class="outputBox">
+				<p class="outputs">O</p>
+			</div>
+		</div-->
 	</div>
 	
-	<!--svg height="600" width="600">
-		<path d="M 100 100 C 300 50, 300 150, 500 100" stroke="blue" stroke-width="5" fill="none" />
+	<svg height="600" width="600" id="guiSpace">
+		<!--path d="M 100 100 C 300 50, 300 150, 500 100" stroke="blue"
+			stroke-width="5" fill="none" /-->
 		Sorry, your browser does not support inline SVG.
-	</svg-->
-	
+	</svg>
+	<script type="text/javascript" src="util.js"></script>
 	<script type="text/javascript" src="draggable.js"></script>
+	<script type="text/javascript" src="components.js"></script>
+	<script type="text/javascript" src="main.js"></script>
 </body>
 </html>
