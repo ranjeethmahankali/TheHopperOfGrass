@@ -1,6 +1,5 @@
 //component related logic
 
-//component class
 class Component{
 	constructor(header, inputs, outputs, inputCaptions, outputCaptions, solver){
 		this.header = header;
@@ -93,7 +92,7 @@ class Component{
 		}
 		html.appendChild(outputBox);
 		
-		dragElement(html);
+		makeDraggable(html);
 		html.id = this.id;
 		domLookup[this.id] = html;
 		return html;
@@ -118,6 +117,7 @@ class Field{
 		}
 		this.connections.push(conn.id);
 	}
+	
 	getAllConnectionIds(){
 		return this.connections;
 	}
@@ -156,7 +156,7 @@ class Field{
 		outputBox.appendChild(outNode);
 		html.appendChild(outputBox);
 		
-		dragElement(html);
+		makeDraggable(html);
 		domLookup[this.id] = html;
 		html.id = this.id;
 		return html;

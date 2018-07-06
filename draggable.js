@@ -5,7 +5,7 @@ var YBounds = [0, 600];
 var comps = document.getElementsByClassName("comp");
 
 for(var i = 0; i < comps.length; i++){
-	dragElement(comps[i]);
+	makeDraggable(comps[i]);
 }
 
 // var debug = null;
@@ -20,7 +20,8 @@ function boundsContained(bound, container){
 		bound[2] >= container[2] && bound[3] <= container[3];
 }
 
-function dragElement(elmnt) {
+//makes a UI DOM element into a draggable element
+function makeDraggable(elmnt) {
 	var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 	if (elmnt.getElementsByClassName("compHeader")[0]) {
 		/* if present, the header is where you move the DIV from:*/
@@ -90,4 +91,12 @@ function dragElement(elmnt) {
 		document.onmouseup = null;
 		document.onmousemove = null;
 	}
+}
+
+function makeConnectible(elem){
+	
+	var inPorts = elem.getElementsByClassName("inputs");
+	var outPorts = elem.getElementsByClassName("outputs");
+	var ports = inPorts.concat(outPorts);
+	//incomplete
 }
