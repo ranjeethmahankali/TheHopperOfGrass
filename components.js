@@ -1,8 +1,4 @@
 //component related logic
-//global lookup tables
-var compFieldLookup = {};
-var connectionLookup = {};
-var domLookup = {};
 
 //component class
 class Component{
@@ -29,8 +25,34 @@ class Component{
 		compFieldLookup[this.id] = this;
 	}
 	
-	addConnection(){
-		
+	updateHtml(){
+		if(domLookup[this.id] != undefined){
+			domLookup[this.id] = undefined;
+		}
+		var newHtml = this.getHtml();
+	}
+	
+	addConnection(conn, paramIndex, isIncoming){
+		if(isIncoming){
+			this.incoming[this.inputs[paramIndex]] = conn.id;
+		}else{
+			this.outgoing[this.outputs[paramIndex]] = conn.id;
+		}
+	}
+	
+	getAllConnectionIds(){
+		var ids = []
+		for(var key in this.incoming){
+			if(this.incoming[key] != undefined){
+				ids.push(this.incoming[key]);
+			}
+		}
+		for(var key in this.outgoing){
+			if(this.outgoing[key] != undefined){
+				ids.push(this.outgoing[key]);
+			}
+		}
+		return ids;
 	}
 	
 	getHtml(){
@@ -72,6 +94,7 @@ class Component{
 		html.appendChild(outputBox);
 		
 		dragElement(html);
+		html.id = this.id;
 		domLookup[this.id] = html;
 		return html;
 	}
@@ -84,6 +107,19 @@ class Field{
 		this.id = newGuid();
 		
 		compFieldLookup[this.id] = this;
+		this.connections = [];
+	}
+	
+	addConnection(conn, paramIndex, isIncoming){
+		//the paramIndex and isIncoming parameters are redundant for a field,
+		//but I kept them to keep the signature of the method consistent
+		if(this.connections.indexOf(conn.id) > -1){
+			return;
+		}
+		this.connections.push(conn.id);
+	}
+	getAllConnectionIds(){
+		return this.connections;
 	}
 	
 	getHtml(){
@@ -122,7 +158,15 @@ class Field{
 		
 		dragElement(html);
 		domLookup[this.id] = html;
+		html.id = this.id;
 		return html;
+	}
+	
+	updateHtml(){
+		if(domLookup[this.id] != undefined){
+			domLookup[this.id] = undefined;
+		}
+		var newHtml = this.getHtml();
 	}
 }
 
@@ -136,9 +180,14 @@ class Connection{
 		
 		//setting up the connection info in the components that are being
 		//connected
-		
 		var inComp = compFieldLookup[this.incomingId];
+		if(inComp != undefined){
+			inComp.addConnection(this, this.incomingIndex, false);
+		}
 		var outComp = compFieldLookup[this.outgoingId];
+		if(outComp != undefined){
+			outComp.addConnection(this, this.outgoingIndex, true);
+		}
 		
 		connectionLookup[this.id] = this;
 	}
@@ -151,9 +200,21 @@ class Connection{
 		var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 		
 		//this is the geometry part
+		var geomDef = this.getGeomDef();
+		path.setAttribute("d", geomDef);
+		path.setAttribute("stroke", "black");
+		path.setAttribute("stroke-width", "2");
+		path.setAttribute("fill", "none");
+		
+		domLookup[this.id] = path;
+		path.id = this.id;
+		return path;
+	}
+	
+	getGeomDef(){
 		var p1, p2, p3, p4;
 		var incoming = this.getIncomingParam();
-		debug = incoming
+		//debug = incoming
 		var outgoing = this.getOutgoingParam();
 		if(incoming == null || outgoing == null){return null;}
 		
@@ -162,10 +223,10 @@ class Connection{
 		outLeft = globalOffsetLeft(outgoing);
 		inTop = globalOffsetTop(incoming);
 		outTop = globalOffsetTop(outgoing);
-		console.log(inLeft, inTop, outLeft, outTop);
+		//console.log(inLeft, inTop, outLeft, outTop);
 		
 		//ext is the control point which affects how soon / late the curve turns to the other component
-		var ext = 60
+		var ext = 75
 		
 		p1 = [inLeft + incoming.offsetWidth, 
 			inTop + Math.floor(incoming.offsetHeight/2) + 1];
@@ -175,17 +236,20 @@ class Connection{
 		p4 = [outLeft, outTop + Math.floor(incoming.offsetHeight/2)+1];
 		
 		//draw the connection as a straight line
-		//var geomDef = "M "+p1[0]+" "+p1[1]+" L "+p4[0]+" "+p4[1];
+		//return "M "+p1[0]+" "+p1[1]+" L "+p4[0]+" "+p4[1];
 		//or draw it as a curve
-		var geomDef = "M "+p1[0]+" "+p1[1]+" C "+p2[0]+" "+p2[1]+", "+p3[0]+" "+
+		return "M "+p1[0]+" "+p1[1]+" C "+p2[0]+" "+p2[1]+", "+p3[0]+" "+
 			p3[1]+", "+p4[0]+" "+p4[1];
-		path.setAttribute("d", geomDef);
-		path.setAttribute("stroke", "black");
-		path.setAttribute("stroke-width", "2");
-		path.setAttribute("fill", "none");
-		
-		domLookup[this.id] = path;
-		return path;
+	}
+	
+	updateHtml(){
+		if(domLookup[this.id] == undefined){
+			var newHtml = this.getHtml();
+		}
+		else{
+			domLookup[this.id].setAttribute("d", this.getGeomDef());
+			debug = domLookup[this.id];
+		}
 	}
 	
 	getIncomingParam(){

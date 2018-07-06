@@ -1,3 +1,8 @@
+//global lookup tables
+var compFieldLookup = {};
+var connectionLookup = {};
+var domLookup = {};
+//varirables for debugging purposes
 var debug = null;
 //general utility functions
 function newGuid() {  

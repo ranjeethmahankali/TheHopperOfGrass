@@ -47,10 +47,9 @@ function dragElement(elmnt) {
 	function elementDrag(e) {
 		e = e || window.event;
 		e.preventDefault();
-		//bailing out if the component is at the edge
 		var elemBounds = getElementBounds(elmnt);
 		var xpos, ypos;
-
+		//making sure the component is not out of bounds
 		if(boundsContained(elemBounds, XBounds.concat(YBounds))){
 			// calculate the new cursor position:
 			pos1 = pos3 - e.clientX;
@@ -73,6 +72,17 @@ function dragElement(elmnt) {
 		//setting the position to the DOM element
 		elmnt.style.top = (ypos) + "px";
 		elmnt.style.left =  (xpos) + "px";
+		
+		//now updating the connections if any to this element and redrawing the UI
+		var comp = compFieldLookup[elmnt.id];
+		if(comp != undefined){
+			var connIds = comp.getAllConnectionIds();
+			var conns = connIds.map((idStr) => connectionLookup[idStr]);
+			//console.log(conns);
+			for(var i = 0; i < conns.length; i++){
+				conns[i].updateHtml();
+			}
+		}
 	}
 
 	function closeDragElement() {
