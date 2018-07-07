@@ -161,6 +161,9 @@ function makeConnectible(elem){
 		port1 = null;
 		port2 = null;
 		endTempSvgPath();
+		
+		// evaluating the graph now that it is changed
+		evaluateGraph();
 	}
 	
 	function updateTempPath(e){

@@ -2,8 +2,10 @@
 var compFieldLookup = {};
 var connectionLookup = {};
 var domLookup = {};
+var svgNS = "http://www.w3.org/2000/svg";
 //varirables for debugging purposes
 var debug1 = null, debug2 = null;
+
 //general utility functions
 function newGuid() {  
    function s4() {  
@@ -31,7 +33,7 @@ function globalOffsetTop(node){
 }
 
 function addSvgPath(pathNode){
-	var container = document.getElementsByTagNameNS("http://www.w3.org/2000/svg", 'svg')[0];
+	var container = document.getElementsByTagNameNS(svgNS, 'svg')[0];
 	container.appendChild(pathNode);
 }
 
@@ -67,7 +69,7 @@ function startTempSvgPath(start, end){
 	var geomDef = getSCurveGeomDef(start, end);
 	
 	endTempSvgPath();
-	var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+	var path = document.createElementNS(svgNS, "path");
 	path.setAttribute("d", geomDef);
 	path.setAttribute("stroke", "gray");
 	path.setAttribute("stroke-width", "2");
@@ -85,8 +87,8 @@ function updateTempSvgPath(start, end){
 }
 
 function endTempSvgPath(){
-	var svg = document.getElementsByTagNameNS("http://www.w3.org/2000/svg", 'svg')[0];
-	var paths = document.getElementsByTagNameNS("http://www.w3.org/2000/svg", 'path');
+	var svg = document.getElementsByTagNameNS(svgNS, 'svg')[0];
+	var paths = document.getElementsByTagNameNS(svgNS, 'path');
 	//console.log(paths.length);
 	for(var i = 0; i < paths.length; i++){
 		if(paths[i].id == "tempPath"){
@@ -103,8 +105,39 @@ function getComponentForPort(portNode){
 }
 
 function removeSvgPath(connId){
-	var container = document.getElementsByTagNameNS("http://www.w3.org/2000/svg", 'svg')[0];
+	var container = document.getElementsByTagNameNS(svgNS, 'svg')[0];
 	var path = document.getElementById(connId);
 	domLookup[connId] = undefined;
 	container.removeChild(path);
+}
+
+function deleteGeometry(geomId){
+	if(geomId == null){return;}
+	var container = document.getElementsByTagNameNS(svgNS, 'svg')[1];
+	var oldGeom = container.getElementById(geomId);
+	if(oldGeom != null){
+		container.removeChild(oldGeom);
+	}
+}
+
+function addGeometry(geomNode){
+	var container = document.getElementsByTagNameNS(svgNS, 'svg')[1];
+	container.appendChild(geomNode);
+}
+
+function evaluateGraph(){
+	/*
+	Getting all the leafNodes in the graph because evaluating them will recursively
+	trigger the evaluation of everything else relevant.
+	*/
+	leafNodes = [];
+	for(var key in compFieldLookup){
+		if(compFieldLookup[key].isLeafNode()){
+			leafNodes.push(compFieldLookup[key]);
+		}
+	}
+	
+	for(var i = 0; i < leafNodes.length; i++){
+		leafNodes[i].evaluate();
+	}
 }

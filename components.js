@@ -25,6 +25,16 @@ class Component{
 		//graph evaluation related stuff
 		this.solver = solver || ((params) => {});
 		this.geomSolver = geomSolver || ((params) => {return null;});
+		this.geomId = null;
+	}
+	
+	isLeafNode(){
+		for(var i = 0; i < this.outputs.length; i++){
+			if(this.outgoing[this.outputs[i]] != null){
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	updateHtml(){
@@ -109,6 +119,9 @@ class Component{
 	}
 	
 	getOutputValue(index){
+		//deleting old geometry
+		deleteGeometry(this.geomId);
+		
 		var inputVals = [];
 		for(var i = 0; i < this.inputs.length; i++){
 			var conn = connectionLookup[this.incoming[this.inputs[i]]];
@@ -117,13 +130,24 @@ class Component{
 			}
 			var val = conn.getTransmitValue();
 			if(val == null){
+				//one of the inputs seems to be unset so we bail out
 				return null;
 			}
 			inputVals.push(val);
 		}
 		
 		var outputVal = this.solver(inputVals);
+		
+		//creating new geometry
+		this.geomId = this.geomSolver(inputVals);
+		
 		return outputVal;
+	}
+	
+	evaluate(){
+		for(var i = 0; i < this.outputs.length; i++){
+			this.getOutputValue(i);
+		}
 	}
 }
 
@@ -146,6 +170,10 @@ class Field{
 			return;
 		}
 		this.connections.push(conn.id);
+	}
+	
+	isLeafNode(){
+		return false;
 	}
 	
 	getAllConnectionIds(){
@@ -173,6 +201,8 @@ class Field{
 		inpNode.setAttribute("contenteditable", "true");
 		inpNode.id = "0";
 		inpNode.appendChild(document.createTextNode(this.isNumber ? "0" : "value"));
+		inpNode.addEventListener("input", evaluateGraph);
+		debug1 = inpNode;
 		
 		inputBox.appendChild(inpNode);
 		html.appendChild(inputBox);
@@ -212,6 +242,9 @@ class Field{
 				return numVal;
 			}
 			else{
+				if(strVal == ""){
+					return 0;
+				}
 				alert("Invalid input detected");
 				this.state = "error";
 				return null;
