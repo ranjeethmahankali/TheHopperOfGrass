@@ -241,7 +241,7 @@ class Field{
 				return numVal;
 			}
 			else{
-				if(strVal == ""){
+				if(strVal == "" || strVal == "-"){
 					return 0;
 				}
 				alert("Invalid input detected");
