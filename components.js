@@ -140,7 +140,7 @@ class Field{
 		inputBox.className = "inputBox";
 		
 		var inpNode = document.createElement("p");
-		inpNode.className = "inputs";
+		inpNode.className = "fields";
 		inpNode.setAttribute("contenteditable", "true");
 		inpNode.id = "0";
 		inpNode.appendChild(document.createTextNode(this.isNumber ? "0" : "value"));
