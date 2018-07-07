@@ -1,19 +1,40 @@
 window.onload = main;
 ComponentDefinitions = {}
 
-//function defineComponent(name, )
+function defineComponent(name, inSymbols, outSymbols, inCaptions, outCaptions,
+	solver, geomSolver){
+	
+	ComponentDefinitions[name] = {
+		"name": name,
+		"inSymbols": inSymbols,
+		"outSymbols": outSymbols,
+		"inCaptions": inCaptions,
+		"outCaptions": outCaptions,
+		"solver": solver,
+		"geomSolver": geomSolver,
+	};
+}
 
-//main script
-function main(){
-	/*
-	comp = new Component("circle",['C','R'],['O'],["Center", "Radius"],["Circle"],
-		null);
-	*/
-	//console.log(comp.id);
-	var fld1 = new Field("number", true);
-	var fld2 = new Field("number", true);
-	var fld3 = new Field("number", true);
-	var comp1 = new Component("point",["x", "y"], ["out"], ["x","y"], ["point"],
+function createComponentInstance(compName){
+	var compData = ComponentDefinitions[compName];
+	if(compData == undefined){
+		alert("unrecognized component!");
+		return;
+	}
+	return new Component(
+		compData["name"],
+		compData["inSymbols"],
+		compData["outSymbols"],
+		compData["inCaptions"],
+		compData["outCaptions"],
+		compData["solver"],
+		compData["geomSolver"],
+	);
+}
+
+function defineStandardComponents(){
+	//defining a point component
+	defineComponent("point",["x", "y"], ["out"], ["x","y"], ["point"],
 		(params) => {
 			return [params[0], params[1]];
 		},
@@ -30,7 +51,8 @@ function main(){
 			return geom.id;
 		});
 	
-	var comp2 = new Component("circle",["C", "R"], ["out"], ["center","radius"], 
+	//defining a circle component
+	defineComponent("circle",["C", "R"], ["out"], ["center","radius"], 
 		["out"], (params) => {
 			return params[0] + params[1];
 		},
@@ -46,6 +68,18 @@ function main(){
 			addGeometry(geom);
 			return geom.id;
 		});
+}
+
+//main script
+function main(){
+	
+	defineStandardComponents();
+	var fld1 = new Field("number", true);
+	var fld2 = new Field("number", true);
+	var fld3 = new Field("number", true);
+	var comp1 = createComponentInstance("point");
+	
+	var comp2 = createComponentInstance("circle");
 	
 	addComponent(fld1.getHtml());
 	addComponent(fld2.getHtml());
