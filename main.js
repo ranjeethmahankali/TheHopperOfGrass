@@ -12,11 +12,22 @@ function main(){
 	//console.log(comp.id);
 	var fld1 = new Field("number", true);
 	var fld2 = new Field("number", true);
-	var comp1 = new Component("add",["A", "B"], ["out"], ["first","second"], ["sum"],
-		(params) => {return params[0] + params[1]});
+	var comp1 = new Component("point",["x", "y"], ["out"], ["x","y"], ["pt"],
+		(params) => {
+			return [params[0], params[1]];
+		},
+		(params) => {
+			var compId = params[0];
+			//incomplete
+		});
 	
-	var comp2 = new Component("add",["A", "B"], ["out"], ["first","second"], ["sum"],
-		(params) => {return params[0] + params[1]});
+	var comp2 = new Component("circle",["C", "R"], ["out"], ["center","radius"], 
+		["out"], (params) => {
+			return params[0] + params[1];
+		},
+		params => {
+			var compId = params[0];
+		});
 	
 	addComponent(fld1.getHtml());
 	addComponent(fld2.getHtml());

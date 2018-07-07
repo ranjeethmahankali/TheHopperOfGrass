@@ -1,7 +1,8 @@
 //component related logic
 
 class Component{
-	constructor(header, inputs, outputs, inputCaptions, outputCaptions, solver){
+	constructor(header, inputs, outputs, inputCaptions, outputCaptions, solver,
+		geomSolver){
 		this.header = header;
 		this.id = newGuid();
 		this.inputs = inputs;
@@ -23,6 +24,7 @@ class Component{
 		
 		//graph evaluation related stuff
 		this.solver = solver || ((params) => {});
+		this.geomSolver = geomSolver || ((params) => {return null;});
 	}
 	
 	updateHtml(){
@@ -242,7 +244,6 @@ class Connection{
 		}
 		
 		connectionLookup[this.id] = this;
-		//console.log(connectionLookup);
 	}
 	
 	getHtml(){
