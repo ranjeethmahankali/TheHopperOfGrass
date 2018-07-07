@@ -17,7 +17,7 @@ class Component{
 		
 		this.outgoing = {};
 		for(var i = 0; i < this.outputs.length; i++){
-			this.outgoing[this.outputs[i]] = null;
+			this.outgoing[this.outputs[i]] = [];
 		}
 		
 		compFieldLookup[this.id] = this;
@@ -30,7 +30,7 @@ class Component{
 	
 	isLeafNode(){
 		for(var i = 0; i < this.outputs.length; i++){
-			if(this.outgoing[this.outputs[i]] != null){
+			if(this.outgoing[this.outputs[i]].length > 0){
 				return false;
 			}
 		}
@@ -51,23 +51,20 @@ class Component{
 			}
 			this.incoming[this.inputs[paramIndex]] = conn.id;
 		}else{
-			if(this.outgoing[this.outputs[paramIndex]] != null){
-				removeSvgPath(this.outgoing[this.outputs[paramIndex]]);
-			}
-			this.outgoing[this.outputs[paramIndex]] = conn.id;
+			this.outgoing[this.outputs[paramIndex]].push(conn.id);
 		}
 	}
 	
 	getAllConnectionIds(){
 		var ids = []
 		for(var key in this.incoming){
-			if(this.incoming[key] != undefined){
+			if(this.incoming[key] != null){
 				ids.push(this.incoming[key]);
 			}
 		}
 		for(var key in this.outgoing){
-			if(this.outgoing[key] != undefined){
-				ids.push(this.outgoing[key]);
+			if(this.outgoing[key].length > 0){
+				ids = ids.concat(this.outgoing[key]);
 			}
 		}
 		return ids;
