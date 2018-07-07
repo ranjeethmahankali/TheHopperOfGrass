@@ -16,7 +16,7 @@ function componentSelect(compId){
 	var comp = compFieldLookup[compId];
 	if(!comp.geomId){return;}
 	var geomNode = document.getElementById(comp.geomId);
-	geomNode.setAttribute("stroke", "green");
+	geomNode.setAttribute("stroke", "red");
 	//geomNode.setAttribute("fill", "green");
 }
 

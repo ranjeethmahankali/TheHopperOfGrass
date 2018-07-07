@@ -82,3 +82,15 @@
 .outputs:hover{
 	background-color: #b1b1b1;
 }
+
+#formGui{
+	position: absolute;
+	bottom: 10px;
+	left: 5px;
+}
+
+button{
+	padding: 3px;
+	margin: 3px;
+	float: left;
+}

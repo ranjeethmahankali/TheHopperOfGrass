@@ -54,7 +54,7 @@ function getPortAnchor(portNode){
 
 function getSCurveGeomDef(start, end){
 	//ext is the control point which affects how soon / late the curve turns to the other component
-	var ext = 75
+	var ext = 60
 	//console.log(start, end);
 	p2 = [start[0]+ext, start[1]];
 	p3 = [end[0]-ext, end[1]];
