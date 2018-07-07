@@ -73,6 +73,7 @@ class Component{
 			var inpNode = document.createElement("p");
 			inpNode.className = "inputs";
 			inpNode.appendChild(document.createTextNode(this.inputs[i]));
+			inpNode.id = i.toString();
 			//inpNode.setAttribute("contenteditable", "true");
 			var caption = this.inputCaptions[this.inputs[i]]
 			if(caption != null){inpNode.title = caption;}
@@ -141,6 +142,7 @@ class Field{
 		var inpNode = document.createElement("p");
 		inpNode.className = "inputs";
 		inpNode.setAttribute("contenteditable", "true");
+		inpNode.id = "0";
 		inpNode.appendChild(document.createTextNode(this.isNumber ? "0" : "value"));
 		
 		inputBox.appendChild(inpNode);
@@ -151,6 +153,7 @@ class Field{
 		
 		var outNode = document.createElement("p");
 		outNode.className = "outputs";
+		outNode.id = "0";
 		outNode.appendChild(document.createTextNode("out"));
 		
 		outputBox.appendChild(outNode);
@@ -177,6 +180,7 @@ class Connection{
 		this.incomingIndex = incomingIndex;
 		this.outgoingId = outgoingId;
 		this.outgoingIndex = outgoingIndex;
+		//console.log(incomingId, incomingIndex, outgoingId, outgoingIndex);
 		
 		//setting up the connection info in the components that are being
 		//connected
@@ -190,6 +194,7 @@ class Connection{
 		}
 		
 		connectionLookup[this.id] = this;
+		//console.log(connectionLookup);
 	}
 	
 	getHtml(){
@@ -212,34 +217,15 @@ class Connection{
 	}
 	
 	getGeomDef(){
-		var p1, p2, p3, p4;
 		var incoming = this.getIncomingParam();
 		//debug = incoming
 		var outgoing = this.getOutgoingParam();
 		if(incoming == null || outgoing == null){return null;}
 		
-		var inLeft, inTop, outLeft, outTop;
-		inLeft = globalOffsetLeft(incoming);
-		outLeft = globalOffsetLeft(outgoing);
-		inTop = globalOffsetTop(incoming);
-		outTop = globalOffsetTop(outgoing);
-		//console.log(inLeft, inTop, outLeft, outTop);
+		var start = getPortAnchor(incoming);
+		var end = getPortAnchor(outgoing);
 		
-		//ext is the control point which affects how soon / late the curve turns to the other component
-		var ext = 75
-		
-		p1 = [inLeft + incoming.offsetWidth, 
-			inTop + Math.floor(incoming.offsetHeight/2) + 1];
-		p2 = [inLeft + incoming.offsetWidth + ext, 
-			inTop + Math.floor(incoming.offsetHeight/2) +1];
-		p3 = [outLeft - ext, outTop + Math.floor(incoming.offsetHeight/2)+1];
-		p4 = [outLeft, outTop + Math.floor(incoming.offsetHeight/2)+1];
-		
-		//draw the connection as a straight line
-		//return "M "+p1[0]+" "+p1[1]+" L "+p4[0]+" "+p4[1];
-		//or draw it as a curve
-		return "M "+p1[0]+" "+p1[1]+" C "+p2[0]+" "+p2[1]+", "+p3[0]+" "+
-			p3[1]+", "+p4[0]+" "+p4[1];
+		return getSCurveGeomDef(start, end);
 	}
 	
 	updateHtml(){
@@ -248,7 +234,6 @@ class Connection{
 		}
 		else{
 			domLookup[this.id].setAttribute("d", this.getGeomDef());
-			debug = domLookup[this.id];
 		}
 	}
 	

@@ -22,17 +22,12 @@ function boundsContained(bound, container){
 
 //makes a UI DOM element into a draggable element
 function makeDraggable(elmnt) {
+	makeConnectible(elmnt);
 	var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 	if (elmnt.getElementsByClassName("compHeader")[0]) {
 		/* if present, the header is where you move the DIV from:*/
 		elmnt.getElementsByClassName("compHeader")[0].onmousedown = dragMouseDown;
-	} else if (elmnt.getElementsByClassName("outputBox")[0]) {
-		elmnt.getElementsByClassName("outputBox")[0].onmousedown = dragMouseDown
-	}
-	else {
-		/* otherwise, move the DIV from anywhere inside the DIV:*/
-		elmnt.onmousedown = dragMouseDown;
-	}
+	} 
 
 	function dragMouseDown(e) {
 		e = e || window.event;
@@ -94,9 +89,85 @@ function makeDraggable(elmnt) {
 }
 
 function makeConnectible(elem){
-	
+	var port1 = null, port2 = null;
 	var inPorts = elem.getElementsByClassName("inputs");
 	var outPorts = elem.getElementsByClassName("outputs");
-	var ports = inPorts.concat(outPorts);
+	//debug = inPorts;
+	var ports = Array.from(inPorts).concat(Array.from(outPorts));
+	for(var i = 0; i < ports.length; i++){
+		ports[i].onmousedown = startConnection;
+	}
+	
+	function getCurveEndPoints(e){
+		debug1 = e;
+		var start, end;
+		if(port1 == null && port2 == null){return;}
+		if(port1 != null && port2 == null){
+			start = getPortAnchor(port1);
+			end = [e.clientX, e.clientY];
+		}
+		else if(port2 != null && port1 == null){
+			start = [e.clientX, e.clientY];
+			end = getPortAnchor(port2);
+		}
+		else{
+			start = getPortAnchor(port1);
+			end = getPortAnchor(port2);
+		}
+		return [start, end];
+	}
+	
+	function startConnection(e){
+		var beginPort = e.target || e.srcElement;
+		if(beginPort.className == "inputs"){
+			port2 = beginPort;
+		}else{
+			port1 = beginPort;
+		}
+		document.onmouseup = endConnection;
+		document.onmousemove = updateTempPath;
+		
+		//console.log(port1, port2);
+		pts = getCurveEndPoints(e);
+		var start = pts[0];
+		var end = pts[1];
+		startTempSvgPath(start, end);
+	}
+	
+	function endConnection(e){
+		var endPort = e.target || e.srcElement;
+		if(endPort.className == "inputs"){
+			port2 = endPort;
+			//deactivate ports
+			//deactivateReceivingPorts(false);
+		}else if(endPort.className == "outputs"){
+			port1 = endPort;
+			//deactivate ports
+			//deactivateReceivingPorts(true);
+		}
+		if(port1 != null && port2 != null){
+			var compId1 = getComponentForPort(port1);
+			var compId2 = getComponentForPort(port2);
+			var paramIndex1 = parseInt(port1.id);
+			var paramIndex2 = parseInt(port2.id);
+			
+			//console.log(paramIndex1, paramIndex2);
+			var connection = new Connection(compId1, paramIndex1, 
+				compId2, paramIndex2);
+			addSvgPath(connection.getHtml());
+		}
+		document.onmouseup = null;
+		document.onmousemove = null;
+		port1 = null;
+		port2 = null;
+		endTempSvgPath();
+	}
+	
+	function updateTempPath(e){
+		pts = getCurveEndPoints(e);
+		var start = pts[0];
+		var end = pts[1];
+		updateTempSvgPath(start, end);
+	}
 	//incomplete
 }
