@@ -8,6 +8,32 @@ for(var i = 0; i < comps.length; i++){
 	makeDraggable(comps[i]);
 }
 
+function componentSelect(compId){
+	unselectAll();
+	var compNode = document.getElementById(compId);
+	compNode.style.borderWidth = "3px";
+	
+	var comp = compFieldLookup[compId];
+	if(!comp.geomId){return;}
+	var geomNode = document.getElementById(comp.geomId);
+	geomNode.setAttribute("stroke", "green");
+	//geomNode.setAttribute("fill", "green");
+}
+
+function unselectAll(){
+	for(var key in compFieldLookup){
+		var compNode = document.getElementById(compFieldLookup[key].id);
+		compNode.style.borderWidth = "1px";
+		if(compFieldLookup[key].geomId){
+			if(compFieldLookup[key].geomId != null){
+				var geomNode = document.getElementById(compFieldLookup[key].geomId);
+				geomNode.setAttribute("stroke", "black");
+				//geomNode.setAttribute("fill", "none");
+			}
+		}
+	}
+}
+
 // var debug = null;
 
 function getElementBounds(elem){

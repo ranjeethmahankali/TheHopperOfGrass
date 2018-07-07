@@ -23,8 +23,8 @@ function main(){
 			geom.setAttribute("cy", params[1]);
 			geom.setAttribute("r", 2);
 			geom.setAttribute("stroke","black");
-			geom.setAttribute("stroke-width","1");
-			geom.setAttribute("fill","black");
+			geom.setAttribute("stroke-width","4");
+			geom.setAttribute("fill","none");
 			geom.id = newGuid();
 			addGeometry(geom);
 			return geom.id;
@@ -40,7 +40,7 @@ function main(){
 			geom.setAttribute("cy", params[0][1]);
 			geom.setAttribute("r", params[1]);
 			geom.setAttribute("stroke","black");
-			geom.setAttribute("stroke-width","1");
+			geom.setAttribute("stroke-width","2");
 			geom.setAttribute("fill","none");
 			geom.id = newGuid();
 			addGeometry(geom);

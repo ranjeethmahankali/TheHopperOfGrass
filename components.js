@@ -84,6 +84,8 @@ class Component{
 		var head = document.createElement("div");
 		head.className = "compHeader";
 		head.appendChild(document.createTextNode(this.header));
+		var compId = this.id;
+		head.onclick = function(){componentSelect(compId);};
 		html.appendChild(head);
 		
 		var inputBox = document.createElement("div");
