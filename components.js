@@ -19,9 +19,10 @@ class Component{
 			this.outgoing[this.outputs[i]] = null;
 		}
 		
-		this.solver = solver || (() => {});
-		
 		compFieldLookup[this.id] = this;
+		
+		//graph evaluation related stuff
+		this.solver = solver || ((params) => {});
 	}
 	
 	updateHtml(){
@@ -98,6 +99,24 @@ class Component{
 		domLookup[this.id] = html;
 		return html;
 	}
+	
+	getOutputValue(index){
+		var inputVals = [];
+		for(var i = 0; i < this.inputs.length; i++){
+			var conn = connectionLookup[this.incoming[this.inputs[i]]];
+			if(conn == null){
+				return null;
+			}
+			var val = conn.getTransmitValue();
+			if(val == null){
+				return null;
+			}
+			inputVals.push(val);
+		}
+		
+		var outputVal = this.solver(inputVals);
+		return outputVal;
+	}
 }
 
 class Field{
@@ -108,6 +127,8 @@ class Field{
 		
 		compFieldLookup[this.id] = this;
 		this.connections = [];
+		
+		this.state = "ok";
 	}
 	
 	addConnection(conn, paramIndex, isIncoming){
@@ -170,6 +191,27 @@ class Field{
 			domLookup[this.id] = undefined;
 		}
 		var newHtml = this.getHtml();
+	}
+	
+	getOutputValue(index){
+		//index is redundant here but still kept to preserve the signature of the function
+		var domElem = domLookup[this.id];
+		var strVal = domElem.getElementsByClassName("fields")[0].innerText;
+		if(this.isNumber){
+			var numVal = parseInt(strVal);
+			if(!isNaN(numVal)){
+				this.state = "ok";
+				return numVal;
+			}
+			else{
+				alert("Invalid input detected");
+				this.state = "error";
+				return null;
+			}
+		}else{
+			this.state = "ok";
+			return strVal;
+		}
 	}
 }
 
@@ -247,5 +289,11 @@ class Connection{
 		var outComp = compFieldLookup[this.outgoingId];
 		if(outComp == undefined){return null;}
 		return outComp.getHtml().getElementsByClassName("inputs")[this.outgoingIndex];
+	}
+	
+	getTransmitValue(){
+		var inComp = compFieldLookup[this.incomingId];
+		var value = inComp.getOutputValue(this.incomingIndex);
+		return value;
 	}
 }
