@@ -1,6 +1,9 @@
-//main script
 window.onload = main;
+ComponentDefinitions = {}
 
+//function defineComponent(name, )
+
+//main script
 function main(){
 	/*
 	comp = new Component("circle",['C','R'],['O'],["Center", "Radius"],["Circle"],

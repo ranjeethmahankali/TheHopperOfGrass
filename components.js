@@ -34,8 +34,14 @@ class Component{
 	
 	addConnection(conn, paramIndex, isIncoming){
 		if(isIncoming){
+			if(this.incoming[this.inputs[paramIndex]] != null){
+				removeSvgPath(this.incoming[this.inputs[paramIndex]]);
+			}
 			this.incoming[this.inputs[paramIndex]] = conn.id;
 		}else{
+			if(this.outgoing[this.outputs[paramIndex]] != null){
+				removeSvgPath(this.outgoing[this.outputs[paramIndex]]);
+			}
 			this.outgoing[this.outputs[paramIndex]] = conn.id;
 		}
 	}
@@ -75,9 +81,8 @@ class Component{
 			inpNode.className = "inputs";
 			inpNode.appendChild(document.createTextNode(this.inputs[i]));
 			inpNode.id = i.toString();
-			//inpNode.setAttribute("contenteditable", "true");
-			var caption = this.inputCaptions[this.inputs[i]]
-			if(caption != null){inpNode.title = caption;}
+			var caption = this.inputCaptions[i]
+			if(caption != null){inpNode.setAttribute("title", caption);}
 			inputBox.appendChild(inpNode);
 		}
 		html.appendChild(inputBox);
@@ -88,8 +93,9 @@ class Component{
 			var outNode = document.createElement("p");
 			outNode.className = "outputs";
 			outNode.appendChild(document.createTextNode(this.outputs[i]));
-			var caption = this.outputCaptions[this.outputs[i]]
-			if(caption != null){inpNode.title = caption;}
+			outNode.id = i.toString();
+			var caption = this.outputCaptions[i]
+			if(caption != null){outNode.setAttribute("title", caption);}
 			outputBox.appendChild(outNode);
 		}
 		html.appendChild(outputBox);

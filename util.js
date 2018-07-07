@@ -101,3 +101,10 @@ function getComponentForPort(portNode){
 	}
 	return getComponentForPort(portNode.parentElement);
 }
+
+function removeSvgPath(connId){
+	var container = document.getElementsByTagNameNS("http://www.w3.org/2000/svg", 'svg')[0];
+	var path = document.getElementById(connId);
+	domLookup[connId] = undefined;
+	container.removeChild(path);
+}
