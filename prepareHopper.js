@@ -2,6 +2,17 @@
 
 ComponentDefinitions = {}
 
+/**
+	* Adds a new component definition to the environment.
+	*
+	* @param {String} name - The name of the component.
+	* @param {Array of Strings} inSymbols - The symbols for the input parameters.
+	* @param {Array of Strings} outSymbols - The symbols for the output parameters.
+	* @param {Array of Strings} inCaptions - Captions for the input parameters.
+	* @param {Array of Strings} outCaptions - Captions for the output parameters.
+	* @param {Arrow Function (lambda exp)} solver - This function should evaluate the output of the component
+	* @param {Arrow Function (lambda exp)} geometry solver - This function should evaluate the geometry output of the component
+	*/
 function defineComponent(name, inSymbols, outSymbols, inCaptions, outCaptions,
 	solver, geomSolver){
 	ComponentDefinitions[name] = {

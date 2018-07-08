@@ -1,5 +1,11 @@
 window.onload = main;
 
+/**
+	* Creates an instance of a component with the given name and adds it to the
+	* gui canvas.
+	*
+	* @param {String} compName - The name of the component to be added.
+	*/
 function createComponentInstance(compName){
 	var compData = ComponentDefinitions[compName];
 	if(compData == undefined){
@@ -19,6 +25,9 @@ function createComponentInstance(compName){
 	addComponent(component.getHtml());
 }
 
+/**
+	* Creates an input field and adds it to the gui canvas
+	*/
 function createField(){
 	var fld1 = new Field("number", true);
 	addComponent(fld1.getHtml());
