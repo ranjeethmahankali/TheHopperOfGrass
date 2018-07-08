@@ -11,6 +11,11 @@ As the image below shows, the module is split into three parts:
 * Component Definitions
 * User Interface and Results visualization
 
+Keeping these three parts separate and independent as much as possible is essential to
+maintain flexibility and scalability of this app. New components can be defined just by
+adding a few lines to the Comoponent Definitions, without having to change anything in
+other files.
+
 ![Architecture](hopperArch.png)
 
 ## Computational Graph Kernel
