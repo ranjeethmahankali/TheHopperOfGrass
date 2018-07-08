@@ -11,7 +11,7 @@ As the image below shows, the module is split into three parts:
 * Component Definitions
 * User Interface and Results visualization
 
-![Architecture](hopperArch.png | width=200)
+![Architecture](hopperArch.png)
 
 ## Computational Graph Kernel
 This part is implemented in the "components.js" file. This contains the logic of how the
