@@ -24,4 +24,5 @@ This part is implemented in the "prepareHopper.js" file. This file contains the 
 specific components.
 
 ## User Interface and Results visualization
-This part handles the UI logic, drawing the components, connection wires etc.
+This part handles the UI logic, drawing the components, connection wires etc, implemented in 
+uiBehavior.js file.
