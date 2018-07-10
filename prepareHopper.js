@@ -80,3 +80,28 @@ defineComponent("line",["S", "E"], ["out"], ["start","end"], ["line"],
 		addGeometry(geom);
 		return geom.id;
 	});
+	
+//defining the line component
+defineComponent("polarLn",["S", "D", "L"], ["out"], ["start","direction", "length"], 
+	["line"], 
+	(params) => {
+		return params[0] + params[1];
+	},
+	params => {//geometry solver
+		var geom = document.createElementNS(svgNS, "line");
+		var start = params[0];
+		//[x + rcosA, y +rsinA]
+		var ang = params[1]*Math.PI/180;
+		var end = [start[0] + params[2]*Math.cos(ang), 
+			start[1] + params[2]*Math.sin(ang)]
+		geom.setAttribute("x1", start[0]);
+		geom.setAttribute("y1", start[1]);
+		geom.setAttribute("x2", end[0]);
+		geom.setAttribute("y2", end[1]);
+		geom.setAttribute("stroke","black");
+		geom.setAttribute("stroke-width","2");
+		geom.setAttribute("fill","none");
+		geom.id = newGuid();
+		addGeometry(geom);
+		return geom.id;
+	});
